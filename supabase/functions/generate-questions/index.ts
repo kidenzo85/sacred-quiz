@@ -16,14 +16,15 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `Tu es un expert en religions du monde. Génère exactement ${count || 5} questions à choix multiples (QCM) sur le thème religieux${category ? ` en te concentrant sur : ${category}` : ""}.
+    const systemPrompt = `Tu es un expert en théologie chrétienne et en études bibliques. Génère exactement ${count || 5} questions à choix multiples (QCM) exclusivement basées sur la Bible (Ancien et Nouveau Testament)${category ? ` en te concentrant sur : ${category}` : ""}.
 
 Chaque question doit :
 - Être en français
+- Porter UNIQUEMENT sur la Bible chrétienne (personnages bibliques, événements, versets, paraboles, enseignements de Jésus, épîtres, prophéties)
 - Avoir exactement 4 options de réponse
 - Avoir une seule bonne réponse
-- Inclure une explication courte de la bonne réponse
-- Couvrir des sujets variés : prophètes, textes sacrés, rituels, histoire, commandements, fêtes, lieux saints
+- Inclure une explication courte avec la référence biblique (livre, chapitre, verset)
+- Couvrir des sujets variés : Ancien Testament, Nouveau Testament, vie de Jésus, paraboles, miracles, prophètes, épîtres de Paul, Apocalypse, Psaumes, Proverbes
 
 IMPORTANT : Retourne les questions en utilisant le tool "generate_questions".`;
 
@@ -37,7 +38,7 @@ IMPORTANT : Retourne les questions en utilisant le tool "generate_questions".`;
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Génère ${count || 5} questions QCM religieuses${category ? ` sur le thème: ${category}` : " variées"}.` },
+          { role: "user", content: `Génère ${count || 5} questions QCM sur la Bible chrétienne${category ? ` sur le thème: ${category}` : " couvrant l'Ancien et le Nouveau Testament"}.` },
         ],
         tools: [
           {

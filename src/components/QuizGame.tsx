@@ -5,6 +5,7 @@ import { useTimer } from "@/hooks/useTimer";
 import { TimerCircle } from "@/components/TimerCircle";
 import { AnswerOption } from "@/components/AnswerOption";
 import { BookOpen, RotateCcw, Trophy, Sparkles, Volume2, VolumeX, Loader2 } from "lucide-react";
+import { playCorrectSound, playWrongSound, playTimeUpSound } from "@/lib/sounds";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -54,6 +55,7 @@ export function QuizGame() {
   }, [currentIndex, questions.length]);
 
   const handleTimeUp = useCallback(() => {
+    playTimeUpSound();
     setState("revealed");
   }, []);
 
@@ -132,6 +134,7 @@ export function QuizGame() {
       setCongratsMessage(msg);
       setState("revealed");
 
+      playCorrectSound();
       if (voiceEnabled) speakText(msg);
 
       // Auto-advance after delay
@@ -140,6 +143,7 @@ export function QuizGame() {
       }, AUTO_ADVANCE_DELAY);
     } else {
       setState("revealed");
+      playWrongSound();
       if (voiceEnabled) speakText("Dommage ! La bonne réponse était : " + question.options[question.correctIndex]);
     }
   };
@@ -165,7 +169,7 @@ export function QuizGame() {
         <div>
           <h2 className="font-display text-3xl font-bold text-foreground mb-3">Prêt à tester vos connaissances ?</h2>
           <p className="text-muted-foreground font-body">
-            10 questions générées par IA · {TIMER_SECONDS}s par question
+            10 questions sur la Bible · {TIMER_SECONDS}s par question
           </p>
         </div>
         <div className="flex flex-col gap-3 items-center">
@@ -176,7 +180,10 @@ export function QuizGame() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setVoiceEnabled(!voiceEnabled)}
+            onClick={() => {
+              setVoiceEnabled(!voiceEnabled);
+              timer.setSoundEnabled(!voiceEnabled);
+            }}
             className="text-muted-foreground"
           >
             {voiceEnabled ? <Volume2 className="w-4 h-4 mr-2" /> : <VolumeX className="w-4 h-4 mr-2" />}
@@ -197,7 +204,7 @@ export function QuizGame() {
         <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto" />
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground mb-2">Génération des questions...</h2>
-          <p className="text-muted-foreground font-body">L'IA prépare votre quiz religieux</p>
+          <p className="text-muted-foreground font-body">L'IA prépare votre quiz biblique</p>
         </div>
       </motion.div>
     );
@@ -252,7 +259,10 @@ export function QuizGame() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setVoiceEnabled(!voiceEnabled)}
+            onClick={() => {
+              setVoiceEnabled(!voiceEnabled);
+              timer.setSoundEnabled(!voiceEnabled);
+            }}
             className="text-muted-foreground"
           >
             {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}

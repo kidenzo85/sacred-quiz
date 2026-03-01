@@ -57,7 +57,11 @@ export function QuizGame() {
   const handleTimeUp = useCallback(() => {
     playTimeUpSound();
     setState("revealed");
-  }, []);
+    // Auto-advance after time up
+    autoAdvanceRef.current = setTimeout(() => {
+      goToNext();
+    }, AUTO_ADVANCE_DELAY);
+  }, [goToNext]);
 
   const timer = useTimer(TIMER_SECONDS, handleTimeUp);
 
@@ -119,6 +123,13 @@ export function QuizGame() {
     "Magnifique ! 🌟",
     "Parfait ! 👏",
     "Bien joué ! 💫",
+    "Superbe ! 🏆",
+    "Génial ! 🔥",
+    "Impressionnant ! 💪",
+    "Fantastique ! 🎯",
+    "Incroyable ! ⭐",
+    "Tu gères ! 👑",
+    "Chapeau ! 🎩",
   ];
 
   const selectAnswer = (index: number) => {
@@ -145,6 +156,10 @@ export function QuizGame() {
       setState("revealed");
       playWrongSound();
       if (voiceEnabled) speakText("Dommage ! La bonne réponse était : " + question.options[question.correctIndex]);
+      // Auto-advance after wrong answer
+      autoAdvanceRef.current = setTimeout(() => {
+        goToNext();
+      }, AUTO_ADVANCE_DELAY + 1500);
     }
   };
 
@@ -321,12 +336,9 @@ export function QuizGame() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-secondary/5 border border-secondary/20 rounded-xl p-5 space-y-3"
+              className="bg-secondary/5 border border-secondary/20 rounded-xl p-5"
             >
               <p className="text-sm font-body text-foreground">{question.explanation}</p>
-              <Button onClick={nextQuestion} className="w-full">
-                {currentIndex + 1 >= questions.length ? "Voir les résultats" : "Question suivante"}
-              </Button>
             </motion.div>
           )}
         </motion.div>

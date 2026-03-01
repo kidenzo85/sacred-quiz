@@ -28,16 +28,16 @@ export function AnswerOption({ label, index, isSelected, isCorrect, isRevealed, 
 
   return (
     <motion.button
-      initial={{ opacity: 0, x: -20 }}
+      initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.1 }}
+      transition={{ delay: index * 0.05 }}
       disabled={disabled}
       onClick={onClick}
-      className={`w-full flex items-center gap-4 p-4 rounded-lg border-2 transition-all duration-300 text-left ${styles[variant]} ${
+      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border-2 transition-all duration-300 text-left ${styles[variant]} ${
         disabled && variant === "default" ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
       } ${isSelected && variant === "default" ? "border-primary shadow-soft" : ""}`}
     >
-      <span className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-sm ${
+      <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-display font-bold text-xs ${
         variant === "correct"
           ? "bg-success text-success-foreground"
           : variant === "wrong"
@@ -46,9 +46,9 @@ export function AnswerOption({ label, index, isSelected, isCorrect, isRevealed, 
           ? "bg-primary text-primary-foreground"
           : "bg-muted text-muted-foreground"
       }`}>
-        {variant === "correct" ? <Check className="w-5 h-5" /> : variant === "wrong" ? <X className="w-5 h-5" /> : letters[index]}
+        {variant === "correct" ? <Check className="w-4 h-4" /> : variant === "wrong" ? <X className="w-4 h-4" /> : letters[index]}
       </span>
-      <span className="font-body text-base text-foreground">{label}</span>
+      <span className="font-body text-sm text-foreground leading-tight">{label}</span>
     </motion.button>
   );
 }

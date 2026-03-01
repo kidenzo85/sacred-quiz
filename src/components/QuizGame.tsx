@@ -4,8 +4,8 @@ import { sampleQuestions, type QuizQuestion } from "@/data/questions";
 import { useTimer } from "@/hooks/useTimer";
 import { TimerCircle } from "@/components/TimerCircle";
 import { AnswerOption } from "@/components/AnswerOption";
-import { BookOpen, RotateCcw, Trophy, Sparkles, Volume2, VolumeX, Loader2 } from "lucide-react";
-import { playCorrectSound, playWrongSound, playTimeUpSound } from "@/lib/sounds";
+import { BookOpen, RotateCcw, Trophy, Sparkles, Volume2, VolumeX, Loader2, Zap } from "lucide-react";
+import { playCorrectSound, playWrongSound, playTimeUpSound, preloadSounds } from "@/lib/sounds";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -36,9 +36,15 @@ export function QuizGame() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [congratsMessage, setCongratsMessage] = useState<string | null>(null);
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Preload realistic tick sounds on mount
+  useEffect(() => {
+    preloadSounds();
+  }, []);
 
   const question: QuizQuestion | undefined = questions[currentIndex];
 
@@ -111,6 +117,7 @@ export function QuizGame() {
 
     setCurrentIndex(0);
     setScore(0);
+    setStreak(0);
     setSelectedAnswer(null);
     setCongratsMessage(null);
     setState("playing");
@@ -141,6 +148,7 @@ export function QuizGame() {
 
     if (isCorrect) {
       setScore((s) => s + 1);
+      setStreak((s) => s + 1);
       const msg = congratulations[Math.floor(Math.random() * congratulations.length)];
       setCongratsMessage(msg);
       setState("revealed");
@@ -148,15 +156,14 @@ export function QuizGame() {
       playCorrectSound();
       if (voiceEnabled) speakText(msg);
 
-      // Auto-advance after delay
       autoAdvanceRef.current = setTimeout(() => {
         goToNext();
       }, AUTO_ADVANCE_DELAY);
     } else {
+      setStreak(0);
       setState("revealed");
       playWrongSound();
       if (voiceEnabled) speakText("Dommage ! La bonne réponse était : " + question.options[question.correctIndex]);
-      // Auto-advance after wrong answer
       autoAdvanceRef.current = setTimeout(() => {
         goToNext();
       }, AUTO_ADVANCE_DELAY + 1500);
@@ -255,9 +262,24 @@ export function QuizGame() {
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center gap-2 min-w-0">
           <div className="min-w-0">
-            <span className="text-xs font-body text-muted-foreground">
-              Question {currentIndex + 1}/{questions.length}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-body text-muted-foreground">
+                Question {currentIndex + 1}/{questions.length}
+              </span>
+              <span className="text-xs font-display font-bold text-primary">
+                {score} pts
+              </span>
+              {streak >= 2 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="flex items-center gap-0.5 text-xs font-bold text-gradient-gold"
+                >
+                  <Zap className="w-3 h-3 text-primary" />
+                  {streak}×
+                </motion.span>
+              )}
+            </div>
             <div className="flex gap-0.5 mt-0.5">
               {questions.map((_, i) => (
                 <div

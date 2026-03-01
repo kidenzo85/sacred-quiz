@@ -18,20 +18,38 @@ export function TimerCircle({ timeLeft, percentage, isWarning }: TimerCircleProp
       animate={{ scale: 1 }}
       transition={{ type: "spring", stiffness: 200 }}
     >
+      {/* Outer glow ring for urgency */}
+      {isWarning && (
+        <motion.div
+          className="absolute inset-[-6px] rounded-full border-2 border-destructive/40"
+          animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+          transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+        />
+      )}
       <svg width="64" height="64" viewBox="0 0 64 64">
+        {/* Background track */}
         <circle cx="32" cy="32" r={radius} fill="none" className="stroke-muted" strokeWidth="4" />
+        {/* Progress arc */}
         <circle
           cx="32" cy="32" r={radius} fill="none"
           className={isWarning ? "stroke-destructive" : "stroke-primary"}
-          strokeWidth="4" strokeLinecap="round"
-          strokeDasharray={circumference} strokeDashoffset={offset}
+          strokeWidth={isWarning ? "5" : "4"}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
           transform="rotate(-90 32 32)"
-          style={{ transition: "stroke-dashoffset 1s linear" }}
+          style={{ transition: "stroke-dashoffset 1s linear, stroke-width 0.3s ease" }}
         />
       </svg>
-      <span className={`absolute font-display text-lg font-bold ${isWarning ? "text-destructive" : "text-foreground"}`}>
+      <motion.span
+        key={timeLeft}
+        initial={{ scale: 1.3, opacity: 0.5 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className={`absolute font-display text-lg font-bold tabular-nums ${isWarning ? "text-destructive" : "text-foreground"}`}
+      >
         {timeLeft}
-      </span>
+      </motion.span>
     </motion.div>
   );
 }

@@ -7,7 +7,7 @@ interface TimerCircleProps {
 }
 
 export function TimerCircle({ timeLeft, percentage, isWarning }: TimerCircleProps) {
-  const radius = 45;
+  const radius = 28;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
 
@@ -18,30 +18,18 @@ export function TimerCircle({ timeLeft, percentage, isWarning }: TimerCircleProp
       animate={{ scale: 1 }}
       transition={{ type: "spring", stiffness: 200 }}
     >
-      <svg width="110" height="110" viewBox="0 0 110 110">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r={radius} fill="none" className="stroke-muted" strokeWidth="4" />
         <circle
-          cx="55"
-          cy="55"
-          r={radius}
-          fill="none"
-          className="stroke-muted"
-          strokeWidth="6"
-        />
-        <circle
-          cx="55"
-          cy="55"
-          r={radius}
-          fill="none"
+          cx="32" cy="32" r={radius} fill="none"
           className={isWarning ? "stroke-destructive" : "stroke-primary"}
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          transform="rotate(-90 55 55)"
+          strokeWidth="4" strokeLinecap="round"
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          transform="rotate(-90 32 32)"
           style={{ transition: "stroke-dashoffset 1s linear" }}
         />
       </svg>
-      <span className={`absolute font-display text-3xl font-bold ${isWarning ? "text-destructive" : "text-foreground"}`}>
+      <span className={`absolute font-display text-lg font-bold ${isWarning ? "text-destructive" : "text-foreground"}`}>
         {timeLeft}
       </span>
     </motion.div>

@@ -176,19 +176,19 @@ export function QuizGame() {
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center space-y-8 max-w-lg mx-auto"
+        className="flex-1 flex flex-col items-center justify-center text-center gap-6 max-w-lg mx-auto"
       >
-        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto shadow-glow">
-          <BookOpen className="w-10 h-10 text-primary" />
+        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center shadow-glow">
+          <BookOpen className="w-8 h-8 text-primary" />
         </div>
         <div>
-          <h2 className="font-display text-3xl font-bold text-foreground mb-3">Prêt à tester vos connaissances ?</h2>
-          <p className="text-muted-foreground font-body">
+          <h2 className="font-display text-2xl font-bold text-foreground mb-2">Prêt à tester vos connaissances ?</h2>
+          <p className="text-muted-foreground font-body text-sm">
             10 questions sur la Bible · {TIMER_SECONDS}s par question
           </p>
         </div>
         <div className="flex flex-col gap-3 items-center">
-          <Button onClick={fetchAIQuestions} size="lg" className="text-lg px-8 py-6 shadow-glow">
+          <Button onClick={fetchAIQuestions} size="lg" className="text-base px-6 py-5 shadow-glow">
             <Sparkles className="w-5 h-5 mr-2" />
             Commencer le Quiz
           </Button>
@@ -214,12 +214,12 @@ export function QuizGame() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-center space-y-6 max-w-lg mx-auto py-20"
+        className="flex-1 flex flex-col items-center justify-center text-center gap-4"
       >
-        <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto" />
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
         <div>
-          <h2 className="font-display text-2xl font-bold text-foreground mb-2">Génération des questions...</h2>
-          <p className="text-muted-foreground font-body">L'IA prépare votre quiz biblique</p>
+          <h2 className="font-display text-xl font-bold text-foreground mb-1">Génération des questions...</h2>
+          <p className="text-muted-foreground font-body text-sm">L'IA prépare votre quiz biblique</p>
         </div>
       </motion.div>
     );
@@ -231,17 +231,17 @@ export function QuizGame() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="text-center space-y-8 max-w-lg mx-auto"
+        className="flex-1 flex flex-col items-center justify-center text-center gap-6 max-w-lg mx-auto"
       >
-        <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto shadow-glow">
-          <Trophy className="w-12 h-12 text-primary" />
+        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center shadow-glow">
+          <Trophy className="w-10 h-10 text-primary" />
         </div>
         <div>
-          <h2 className="font-display text-3xl font-bold text-foreground mb-2">Quiz terminé !</h2>
-          <p className="text-5xl font-display font-bold text-gradient-gold my-4">{score}/{questions.length}</p>
-          <p className="text-muted-foreground">{pct}% de bonnes réponses</p>
+          <h2 className="font-display text-2xl font-bold text-foreground mb-1">Quiz terminé !</h2>
+          <p className="text-4xl font-display font-bold text-gradient-gold my-3">{score}/{questions.length}</p>
+          <p className="text-muted-foreground text-sm">{pct}% de bonnes réponses</p>
         </div>
-        <Button onClick={fetchAIQuestions} size="lg" className="text-lg px-8 py-6">
+        <Button onClick={fetchAIQuestions} size="lg" className="text-base px-6 py-5">
           <RotateCcw className="w-5 h-5 mr-2" />
           Nouveau Quiz
         </Button>
@@ -250,21 +250,19 @@ export function QuizGame() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div>
-            <span className="text-sm font-body text-muted-foreground">
+    <div className="flex-1 flex flex-col max-w-2xl mx-auto w-full min-h-0">
+      {/* Header row */}
+      <div className="flex items-center justify-between py-1">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="min-w-0">
+            <span className="text-xs font-body text-muted-foreground">
               Question {currentIndex + 1}/{questions.length}
             </span>
-            <div className="flex gap-1 mt-1">
+            <div className="flex gap-0.5 mt-0.5">
               {questions.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-1.5 rounded-full transition-all ${
-                    questions.length > 10 ? "w-4" : "w-8"
-                  } ${
+                  className={`h-1 rounded-full transition-all w-3 ${
                     i < currentIndex ? "bg-primary" : i === currentIndex ? "bg-primary/50" : "bg-muted"
                   }`}
                 />
@@ -278,28 +276,29 @@ export function QuizGame() {
               setVoiceEnabled(!voiceEnabled);
               timer.setSoundEnabled(!voiceEnabled);
             }}
-            className="text-muted-foreground"
+            className="text-muted-foreground h-8 w-8"
           >
-            {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            {voiceEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
           </Button>
         </div>
         <TimerCircle timeLeft={timer.timeLeft} percentage={timer.percentage} isWarning={timer.timeLeft <= 5} />
       </div>
 
-      {/* Question */}
+      {/* Question + Answers — fills remaining space */}
       <AnimatePresence mode="wait">
         <motion.div
           key={question.id}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="space-y-6"
+          exit={{ opacity: 0, y: -10 }}
+          className="flex-1 flex flex-col min-h-0 gap-2"
         >
-          <div className="bg-gradient-card rounded-xl p-6 shadow-card border border-border">
-            <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-body font-medium mb-3">
+          {/* Question card */}
+          <div className="bg-gradient-card rounded-lg p-4 shadow-card border border-border">
+            <span className="inline-block px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-body font-medium mb-1.5">
               {question.category}
             </span>
-            <h3 className="font-display text-xl md:text-2xl font-bold text-foreground leading-relaxed">
+            <h3 className="font-display text-base md:text-lg font-bold text-foreground leading-snug">
               {question.question}
             </h3>
           </div>
@@ -309,14 +308,14 @@ export function QuizGame() {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-2"
+              className="text-center"
             >
-              <span className="text-2xl font-display font-bold text-gradient-gold">{congratsMessage}</span>
+              <span className="text-lg font-display font-bold text-gradient-gold">{congratsMessage}</span>
             </motion.div>
           )}
 
-          {/* Answers */}
-          <div className="space-y-3">
+          {/* Answers — push to bottom */}
+          <div className="mt-auto space-y-2">
             {question.options.map((opt, i) => (
               <AnswerOption
                 key={i}
@@ -331,14 +330,14 @@ export function QuizGame() {
             ))}
           </div>
 
-          {/* Explanation (only on wrong answer or time up) */}
+          {/* Explanation */}
           {state === "revealed" && selectedAnswer !== question.correctIndex && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-secondary/5 border border-secondary/20 rounded-xl p-5"
+              className="bg-secondary/5 border border-secondary/20 rounded-lg p-3"
             >
-              <p className="text-sm font-body text-foreground">{question.explanation}</p>
+              <p className="text-xs font-body text-foreground leading-relaxed">{question.explanation}</p>
             </motion.div>
           )}
         </motion.div>
